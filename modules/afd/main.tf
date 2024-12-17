@@ -10,7 +10,7 @@
 resource "azurerm_cdn_frontdoor_profile" "afd_profile" {
   name                = var.afd_profile_name
   resource_group_name = var.resource_group_name
-  sku_name            = var.sku_name 
+  sku_name            = var.sku_name
   tags                = var.tags
   depends_on          = [var.afd_profile_depends_on]
 }
@@ -34,7 +34,7 @@ resource "azurerm_cdn_frontdoor_origin_group" "afd_origin_group" {
     sample_size                        = 4
     successful_samples_required        = 3
   }
-   health_probe {
+  health_probe {
     interval_in_seconds = 100
     path                = "/"
     protocol            = "Https"
@@ -65,14 +65,14 @@ resource "azurerm_cdn_frontdoor_rule_set" "afd_ruleset" {
 
 #AFD Default rule for AFD Ruleset
 resource "azurerm_cdn_frontdoor_rule" "afd_ruleset_default" {
-  depends_on = [azurerm_cdn_frontdoor_origin_group.afd_origin_group, azurerm_cdn_frontdoor_origin.afd_origins]
+  depends_on                = [azurerm_cdn_frontdoor_origin_group.afd_origin_group, azurerm_cdn_frontdoor_origin.afd_origins]
   name                      = "defaultrule"
   cdn_frontdoor_rule_set_id = azurerm_cdn_frontdoor_rule_set.afd_ruleset.id
   order                     = 1
   behavior_on_match         = "Stop"
 
   conditions {
-    url_path_condition {    
+    url_path_condition {
       operator         = "BeginsWith"
       negate_condition = false
       match_values     = ["wp-content/uploads/"]
@@ -111,29 +111,29 @@ resource "azurerm_cdn_frontdoor_route" "afd_default_route" {
 
 #AFD CacheStaticFiles Ruleset for AFD 
 resource "azurerm_cdn_frontdoor_rule" "afd_ruleset_cache_static_files" {
-  depends_on = [azurerm_cdn_frontdoor_origin_group.afd_origin_group, azurerm_cdn_frontdoor_origin.afd_origins]
+  depends_on                = [azurerm_cdn_frontdoor_origin_group.afd_origin_group, azurerm_cdn_frontdoor_origin.afd_origins]
   name                      = "CacheStaticFiles"
   cdn_frontdoor_rule_set_id = azurerm_cdn_frontdoor_rule_set.afd_ruleset.id
   order                     = 2
   behavior_on_match         = "Stop"
 
   conditions {
-    url_path_condition {    
+    url_path_condition {
       operator         = "BeginsWith"
       negate_condition = false
-      match_values     = ["wp-includes/","wp-content/themes/"]
+      match_values     = ["wp-includes/", "wp-content/themes/"]
       transforms       = ["Lowercase"]
     }
     url_file_extension_condition {
       operator         = "Equal"
       negate_condition = false
-      match_values     = ["css","js","gif","png","jpg","ico","ttf","otf","woff","woff2"]
+      match_values     = ["css", "js", "gif", "png", "jpg", "ico", "ttf", "otf", "woff", "woff2"]
       transforms       = ["Lowercase"]
     }
   }
 
   actions {
-    route_configuration_override_action {      
+    route_configuration_override_action {
       compression_enabled           = true
       query_string_caching_behavior = "UseQueryString"
       cache_behavior                = "OverrideAlways"

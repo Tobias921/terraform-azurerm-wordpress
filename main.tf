@@ -52,6 +52,40 @@ resource "azurerm_resource_group" "resource_group" {
   tags     = var.tags
 }
 
+##Passwords
+data "azurerm_client_config" "current" {}
+
+resource "random_password" "db-password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+resource "random_password" "admin-password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+module "appservice_key_vault" {
+  source              = "./modules/kv"
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+  key_vault_name      = var.key_vault_name
+  key_vault_sku       = var.key_vault_sku
+}
+
+resource "azurerm_key_vault_secret" "db-password" {
+  name         = "db-password"
+  value        = random_password.db-password.result
+  key_vault_id = module.appservice_key_vault.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "admin-password" {
+  name         = "admin-password"
+  value        = random_password.admin-password.result
+  key_vault_id = module.appservice_key_vault.key_vault_id
+}
 /*
 WordPress App Storage Account and default container
 */
@@ -84,10 +118,10 @@ resource "azurerm_linux_web_app" "wordpress_web_app" {
     DATABASE_HOST                       = "${var.mysql_server_name}.mysql.database.azure.com"
     DATABASE_USERNAME                   = var.mysql_server_username
     DATABASE_NAME                       = var.mysql_wordpress_database_name
-    DATABASE_PASSWORD                   = var.mysql_server_password
+    DATABASE_PASSWORD                   = random_password.db-password.result
     WORDPRESS_ADMIN_EMAIL               = var.wordpress_admin_email
     WORDPRESS_ADMIN_USER                = var.wordpress_admin_admin_user_name
-    WORDPRESS_ADMIN_PASSWORD            = var.wordpress_admin_admin_password
+    WORDPRESS_ADMIN_PASSWORD            = random_password.admin-password.result
     WORDPRESS_TITLE                     = var.wordpress_default_site_title
     WEBSITES_CONTAINER_START_TIME_LIMIT = var.wordpress_container_start_time_limit
     WORDPRESS_LOCALE_CODE               = var.wordpress_locale_code
@@ -115,13 +149,9 @@ resource "azurerm_linux_web_app" "wordpress_web_app" {
     vnet_route_all_enabled = true
 
     application_stack {
-      docker_image = "${var.app_service_docker_registry_url}/${var.wordpress_container_linux_fx_version}"
-      docker_image_tag = "8.2"
+      docker_image_name = "${var.app_service_docker_registry_url}/${var.wordpress_container_linux_fx_version}:8.2"
     }
   }
-
-
-
 
   depends_on = [
     azurerm_mysql_flexible_server.mysql_db_server,

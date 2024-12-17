@@ -14,17 +14,17 @@ resource "azurerm_cdn_profile" "cdn_profile" {
 
 #Create a CDN Endpoint
 resource "azurerm_cdn_endpoint" "cdn_endpoint" {
-  depends_on = [azurerm_cdn_profile.cdn_profile]
+  depends_on             = [azurerm_cdn_profile.cdn_profile]
   location               = "global"
   name                   = var.cdn_endpoint_name
-  profile_name           = azurerm_cdn_profile.cdn_profile.name  
+  profile_name           = azurerm_cdn_profile.cdn_profile.name
   resource_group_name    = var.resource_group_name
   is_compression_enabled = var.is_compression_enabled
   origin_host_header     = var.origin_host_header
   is_http_allowed        = true
   is_https_allowed       = true
 
- origin {
+  origin {
     name       = var.origin.name
     host_name  = var.origin.host_name
     http_port  = var.origin.http_port

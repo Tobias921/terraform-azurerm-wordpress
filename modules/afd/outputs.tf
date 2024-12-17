@@ -5,5 +5,5 @@ output "id" {
 
 output "hostname" {
   description = "Endpoint Hostname"
-  value = azurerm_cdn_frontdoor_endpoint.afd_endpoint.host_name
+  value       = azurerm_cdn_frontdoor_endpoint.afd_endpoint.host_name
 }

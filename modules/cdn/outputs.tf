@@ -8,9 +8,9 @@ output "cdn_endpoint_id" {
   value       = azurerm_cdn_endpoint.cdn_endpoint.id
 }
 
- output "hostname" {
+output "hostname" {
   description = "URL of the CDN endpoint"
-  value = azurerm_cdn_endpoint.cdn_endpoint.fqdn
- } 
+  value       = azurerm_cdn_endpoint.cdn_endpoint.fqdn
+}
 
 

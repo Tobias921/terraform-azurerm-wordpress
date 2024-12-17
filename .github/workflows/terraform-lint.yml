@@ -1,0 +1,41 @@
+name: Terraform Format and Validate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform-fmt-validate:
+    name: Run Terraform fmt and validate
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      # Step 3: Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./ # Specify your Terraform working directory if needed
+
+      # Step 4: Run Terraform fmt to check formatting
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+        working-directory: ./ # Specify your Terraform working directory if needed
+
+      # Step 5: Validate Terraform code
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./ # Specify your Terraform working directory if needed

@@ -92,6 +92,20 @@ variable "virtual_network_db_subnet_cidr" {
 }
 
 /*
+Key Vault Service Settings
+*/
+variable "key_vault_name" {
+  description = "key_vault_prefix"
+  default     = "wp-appsvc-keyvault"
+}
+
+variable "key_vault_sku" {
+  description = "key_vault_prefix"
+  default     = "standard"
+}
+
+
+/*
 App Service Settings
 */
 variable "app_service_hosting_plan_name" {

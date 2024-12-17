@@ -3,7 +3,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.30.0"
+      version = "~> 4.14.0"
     }
     azapi = {
       source = "Azure/azapi"
@@ -12,14 +12,6 @@ terraform {
 }
 
 provider "azapi" {
-  # More information on the authentication methods supported by
-  # the AzApi Provider can be found here:
-  # https://registry.terraform.io/providers/Azure/azapi/latest/docs
-
-  # subscription_id = "..."
-  # client_id       = "..."
-  # client_secret   = "..."
-  # tenant_id       = "..."
 }
 
 provider "azurerm" {
