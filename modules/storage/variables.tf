@@ -16,7 +16,7 @@ variable "resource_group_name" {
 
 variable "location" {
   description = "Storage Account Location"
-  default     = "Australia East"
+  default     = "Sweden Central"
 }
 
 variable "tags" {
@@ -37,7 +37,7 @@ variable "account_tier" {
 
 variable "replication_type" {
   description = "LRS, GRS, RAGRS, ZRS, GZRS or RAGZRS"
-  default     = "LRS"
+  default     = "ZRS"
 }
 
 variable "access_tier" {

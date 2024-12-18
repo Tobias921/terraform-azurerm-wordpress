@@ -10,15 +10,15 @@ tags = {
 }
 
 #Conditional deployment flags
-deploy_azure_storage_account = false //Deploy storage account for use with Wordpress
-deploy_azure_cdn             = false //If true then FrontDoor MUST be false
+deploy_azure_storage_account = true  //Deploy storage account for use with Wordpress
+deploy_azure_cdn             = true  //If true then FrontDoor MUST be false
 deploy_azure_frontdoor       = false //If true then CDN MUST be false
 
 #Resource Group
 resource_group_name = "wordpress-appsvc-rg"
 
 #Location - set all resources to RG location as default
-resource_group_location = "Australia East"
+resource_group_location = "Sweden Central"
 
 #VNet Name
 virtual_network_name = "wp-app-vnet"
