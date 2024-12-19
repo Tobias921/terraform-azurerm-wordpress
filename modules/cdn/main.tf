@@ -1,7 +1,4 @@
-# See https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_profile
-# and https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_endpoint
 
-#Create a CDN Profile
 resource "azurerm_cdn_profile" "cdn_profile" {
   name                = var.cdn_profile_name
   location            = "global"
@@ -12,7 +9,6 @@ resource "azurerm_cdn_profile" "cdn_profile" {
 }
 
 
-#Create a CDN Endpoint
 resource "azurerm_cdn_endpoint" "cdn_endpoint" {
   depends_on             = [azurerm_cdn_profile.cdn_profile]
   location               = "global"

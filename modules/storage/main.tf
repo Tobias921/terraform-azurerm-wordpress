@@ -1,11 +1,8 @@
-# see https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account
 
-#create a random name
 resource "random_id" "storage_account_name_id" {
   byte_length = 8
 }
 
-#Create the storage account
 resource "azurerm_storage_account" "storage_account" {
   name                     = "${var.storage_acct_prefix}${lower(random_id.storage_account_name_id.hex)}"
   depends_on               = [var.storage_depends_on]
@@ -25,7 +22,6 @@ resource "azurerm_storage_account" "storage_account" {
   }
 }
 
-#Create the storage account BLOB container
 resource "azurerm_storage_container" "storage_blob_container" {
   name                  = "${var.storage_acct_container_prefix}${lower(random_id.storage_account_name_id.hex)}"
   storage_account_name  = azurerm_storage_account.storage_account.name

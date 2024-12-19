@@ -1,12 +1,4 @@
-# See https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_profile
-# and https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_endpoint
-# and https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_origin_group
-# and https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_origin
-# and https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_rule_set
-# and https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_route
-# and https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_rule
 
-#Create a AFD Profile
 resource "azurerm_cdn_frontdoor_profile" "afd_profile" {
   name                = var.afd_profile_name
   resource_group_name = var.resource_group_name
@@ -15,7 +7,6 @@ resource "azurerm_cdn_frontdoor_profile" "afd_profile" {
   depends_on          = [var.afd_profile_depends_on]
 }
 
-#Create the AFD endpoint
 resource "azurerm_cdn_frontdoor_endpoint" "afd_endpoint" {
   name                     = var.afd_endpoint_name
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.afd_profile.id
@@ -23,7 +14,6 @@ resource "azurerm_cdn_frontdoor_endpoint" "afd_endpoint" {
   enabled                  = var.enable_afd_endpoint
 }
 
-#Create the AFD Origin group
 resource "azurerm_cdn_frontdoor_origin_group" "afd_origin_group" {
   name                     = var.afd_origingroup_name
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.afd_profile.id
@@ -43,7 +33,6 @@ resource "azurerm_cdn_frontdoor_origin_group" "afd_origin_group" {
 }
 
 
-#AFD Origins
 resource "azurerm_cdn_frontdoor_origin" "afd_origins" {
   name                           = var.afd_origins_name
   cdn_frontdoor_origin_group_id  = azurerm_cdn_frontdoor_origin_group.afd_origin_group.id
@@ -57,13 +46,11 @@ resource "azurerm_cdn_frontdoor_origin" "afd_origins" {
   weight                         = 1000
 }
 
-#AFD ruleset
 resource "azurerm_cdn_frontdoor_rule_set" "afd_ruleset" {
   name                     = var.afd_ruleset_name
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.afd_profile.id
 }
 
-#AFD Default rule for AFD Ruleset
 resource "azurerm_cdn_frontdoor_rule" "afd_ruleset_default" {
   depends_on                = [azurerm_cdn_frontdoor_origin_group.afd_origin_group, azurerm_cdn_frontdoor_origin.afd_origins]
   name                      = "defaultrule"
@@ -93,7 +80,6 @@ resource "azurerm_cdn_frontdoor_rule" "afd_ruleset_default" {
 }
 
 
-#AFD Endpoint Route
 resource "azurerm_cdn_frontdoor_route" "afd_default_route" {
   name                          = var.afd_default_route_name
   cdn_frontdoor_endpoint_id     = azurerm_cdn_frontdoor_endpoint.afd_endpoint.id
@@ -109,7 +95,6 @@ resource "azurerm_cdn_frontdoor_route" "afd_default_route" {
 }
 
 
-#AFD CacheStaticFiles Ruleset for AFD 
 resource "azurerm_cdn_frontdoor_rule" "afd_ruleset_cache_static_files" {
   depends_on                = [azurerm_cdn_frontdoor_origin_group.afd_origin_group, azurerm_cdn_frontdoor_origin.afd_origins]
   name                      = "CacheStaticFiles"
